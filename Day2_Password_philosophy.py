@@ -12,18 +12,27 @@ def parsePasswordRule(line: str) -> [int , int , str]:
     char = char_raw.split(":")
     return [int(minimum),int(maximum),char[0],string]
 
-def checkPWcompliance(PWRule : list) -> bool:  #min_char: int, max_char: int, char: str) -> bool:
+def checkPWcompliance_part1(PWRule : list) -> bool:
     numberchars_inPW = PWRule[3].count(PWRule[2])
     if PWRule[0] <= numberchars_inPW <= PWRule[1]:
         return True
     else:
         return False
 
-CompliantPWs = 0 #count
+def checkPWcompliance_part2(PWRule : list) -> bool:
+    #xor first or second index of the string matches char
+    if (PWRule[3][PWRule[0]-1] == PWRule[2]) ^ (PWRule[3][PWRule[1]-1] == PWRule[2]):  
+        return True
+    return False
 
+CompliantPWs_part1 = 0 #count
+CompliantPWs_part2 = 0 #count
 with open(input_file, 'r') as file:
     for lines in file:
         PasswordRule = parsePasswordRule(lines) 
-        CompliantPWs += checkPWcompliance(PasswordRule)
+        CompliantPWs_part1 += checkPWcompliance_part1(PasswordRule)
+        CompliantPWs_part2 += checkPWcompliance_part2(PasswordRule)
 
-print("number of compliant PWs", CompliantPWs)
+
+print("number of part1 compliant PWs", CompliantPWs_part1)
+print("number of part2 compliant PWs", CompliantPWs_part2)

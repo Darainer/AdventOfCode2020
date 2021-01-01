@@ -8,17 +8,15 @@ valid_ExpirationYear = r"^([2][0][2]\d|2030)$"      #eyr  - four digits; at leas
 valid_height = r"([1][5-8]\d[c][m]|[1][9][0-3][c][m]|59in|[6][0-9]in|[7][0-6]in)" # a number followed by either cm or in:
                                                     #If cm, the number must be at least 150 and at most 193.
                                                     #If in, the number must be at least 59 and at most 76.
-valid_hair_color = r"(a[0-9a-f]{6})"               #hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+valid_hair_color = r"(#[0-9a-f]{6})"               #hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
 valid_eye_color = r"(amb|blu|brn|gry|grn|hzl|oth)" # ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
-valid_passportID = r"([0-9]{6})"                     #pid (Passport ID) - a nine-digit number, including leading zeroes.
-#cid (Country ID) - ignored, missing or not.
+valid_passportID = r"([0-9]{6})"                    #pid (Passport ID) - a nine-digit number, including leading zeroes.
+valid_countryID = r"(.*)"                            #cid (Country ID) - ignored, missing or not.
 
-ReferenceValueDictionary = dict(byr=valid_birth_year,iyr=valid_issue_year,eyr=valid_ExpirationYear,hgt=valid_height,hcr=valid_hair_color, ecl=valid_eye_color,pid=valid_passportID)
+ReferenceValueDictionary = dict(byr=valid_birth_year,iyr=valid_issue_year,eyr=valid_ExpirationYear,hgt=valid_height,hcl=valid_hair_color, ecl=valid_eye_color,pid=valid_passportID,cid=valid_countryID)
 
 #added for readability
 ReferenceFieldDictionary= dict(byr="Birth Year", iyr ="Issue Year", eyr="Expiration Year",hgt="Height", hcl="Hair Color",ecl="Eye Color", pid="Passport ID",cid="Country ID")
-
-
 
 def ParsePassportData(currentPassport: list) -> dict:
     PassportDictionary= dict(isValid=True)
@@ -35,10 +33,17 @@ def ParsePassportData(currentPassport: list) -> dict:
     return PassportDictionary
 
 def isPassportValueValid(Passportdata : dict ,field_for_test : str) -> bool:
-    if field_for_test[0] == 'byr':    #need tests for all strings
+    if field_for_test[0] == "cid":
+        return True     #not testing it, valid passport may or may not contain it
+    else:
         value_test = ReferenceValueDictionary[field_for_test[0]]
         result = re.search(value_test,Passportdata[field_for_test[1]])
-    return result
+        if result:
+            return True
+        else:
+            return False
+    
+
 
 def isPassportDataValid(Passportdata: dict) -> bool:
     for  requiredfields in ReferenceFieldDictionary.items():
@@ -47,7 +52,7 @@ def isPassportDataValid(Passportdata: dict) -> bool:
                 print("invalid Passport: missing",requiredfields[1])
                 return False
         if not isPassportValueValid(Passportdata,requiredfields):
-            print("invalid value in field", requiredfields[1])
+            print("invalid value in field : ", requiredfields[1])
             return False 
     return True
 

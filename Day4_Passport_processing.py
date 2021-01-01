@@ -17,13 +17,21 @@ def ParsePassportData(currentPassport: list) -> dict:
                 return PassportDictionary
     return PassportDictionary
 
+def isPassportValueValid(Passportdata : dict ,field_for_test : str) -> bool:
+    #need tests for all strings
+    return True
+
 def isPassportDataValid(Passportdata: dict) -> bool:
     for  requiredfields in ReferenceFieldDictionary.items():
         if requiredfields[1] not in Passportdata.keys():
             if requiredfields[1] != "Country ID":  #is optional for North pole passports
                 print("invalid Passport: missing",requiredfields[1])
                 return False
+        if not isPassportValueValid(Passportdata,requiredfields):
+            print("invalid value in field", requiredfields[1])
+            return False 
     return True
+
 
 #init
 ValidPassportCounter = 0

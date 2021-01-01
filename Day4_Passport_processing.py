@@ -1,7 +1,23 @@
+import re
 input_file = 'Day4input.txt'
 #input_file = 'Day4_simpletest.txt'
 
+valid_birth_year = r"^([1][9]\d\d|200[0-2])$" # four digits; at least 1920 and at most 2002.
+valid_issue_year = r"^([2][0][1]\d|2020)$" #iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+valid_ExpirationYear = r"^([2][0][2]\d|2030)$" #eyr  - four digits; at least 2020 and at most 2030.
+valid_height = r"([1][5-8]\d[c][m]|[1][9][0-3][c][m]|59in|[6][0-9]in|[7][0-6]in)" # a number followed by either cm or in:
+#If cm, the number must be at least 150 and at most 193.
+#If in, the number must be at least 59 and at most 76.
+hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+pid (Passport ID) - a nine-digit number, including leading zeroes.
+cid (Country ID) - ignored, missing or not.
+
+ReferenceValueDictionary = dict(byr=valid_birth_year)
+
 ReferenceFieldDictionary= dict(byr="Birth Year", iyr ="Issue Year", eyr="Expiration Year",hgt="Height", hcl="Hair Color",ecl="Eye Color", pid="Passport ID",cid="Country ID")
+
+
 
 def ParsePassportData(currentPassport: list) -> dict:
     PassportDictionary= dict(isValid=True)
@@ -18,8 +34,10 @@ def ParsePassportData(currentPassport: list) -> dict:
     return PassportDictionary
 
 def isPassportValueValid(Passportdata : dict ,field_for_test : str) -> bool:
-    #need tests for all strings
-    return True
+    if field_for_test[0] == 'byr':    #need tests for all strings
+        value_test = ReferenceValueDictionary[field_for_test[0]]
+        result = re.search(value_test,Passportdata[field_for_test[1]])
+    return result
 
 def isPassportDataValid(Passportdata: dict) -> bool:
     for  requiredfields in ReferenceFieldDictionary.items():
@@ -31,7 +49,6 @@ def isPassportDataValid(Passportdata: dict) -> bool:
             print("invalid value in field", requiredfields[1])
             return False 
     return True
-
 
 #init
 ValidPassportCounter = 0
@@ -47,6 +64,6 @@ with open(input_file, 'r') as file:
             currentPassport_rawinput.clear()
             continue
         l = line.strip('\n')
-        currentPassport_rawinput.append(l)  
+        currentPassport_rawinput.append(l)
 
 print(ValidPassportCounter)

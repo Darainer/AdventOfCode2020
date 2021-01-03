@@ -8,7 +8,6 @@ def ParseBoardingPass(raw_row: str,raw_col: str) -> [int, int]:
     col = int(bin_col,2)
     return [row,col]
 
-
 all_seats = np.zeros((128,8))
 with open(input_file, 'r') as file:
     highestSeatID=0
@@ -18,6 +17,5 @@ with open(input_file, 'r') as file:
         all_seats[row,column] = 1
         highestSeatID = max(highestSeatID,seatID)
 
-
-print(highestSeatID)
-print(all_seats)  # seat Map of plane
+print(highestSeatID) #part1 
+print(all_seats)  # part2: seat Map of plane

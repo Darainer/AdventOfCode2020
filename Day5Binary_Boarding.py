@@ -1,3 +1,4 @@
+import numpy as np
 input_file = 'Day5input.txt'
 
 def ParseBoardingPass(raw_row: str,raw_col: str) -> [int, int]:
@@ -7,12 +8,16 @@ def ParseBoardingPass(raw_row: str,raw_col: str) -> [int, int]:
     col = int(bin_col,2)
     return [row,col]
 
+
+all_seats = np.zeros((128,8))
 with open(input_file, 'r') as file:
     highestSeatID=0
     for line in file:
-        [row,column] = ParseBoardingPass(line[0:7],line[7:10])
+        [row,column] = ParseBoardingPass(line[0:7],line[7:10]) #second slicing element is exclusive
         seatID = row*8 + column
-        print(seatID)
+        all_seats[row,column] = 1
         highestSeatID = max(highestSeatID,seatID)
 
+
 print(highestSeatID)
+print(all_seats)  # seat Map of plane

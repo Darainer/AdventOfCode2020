@@ -23,10 +23,7 @@ def isPassportValueValid(Passportdata: dict, field_for_test: str) -> bool:
     else:
         value_test = ReferenceValueDictionary[field_for_test[0]]
         result = re.search(value_test, Passportdata[field_for_test[0]])
-        if result:
-            return True
-        else:
-            return False
+        return bool(result)
 
 
 def isPassportDataValid(Passportdata: dict) -> bool:

@@ -1,6 +1,6 @@
 import re
 input_file = 'Day4input.txt'
-#input_file = 'Day4_simpletest.txt'
+# input_file = 'Day4_simpletest.txt'
 
 valid_birth_year = r"^([1][9]\d\d|200[0-2])$"       # four digits; at least 1920 and at most 2002.
 valid_issue_year = r"^([2][0][1]\d|2020)$"          #iyr (Issue Year) - four digits; at least 2010 and at most 2020.
@@ -13,63 +13,62 @@ valid_eye_color = r"(^amb$|^blu$|^brn$|^gry$|^grn$|^hzl$|^oth$)" # ecl (Eye Colo
 valid_passportID = r"(^[0-9]{9}$)"                    #pid (Passport ID) - a nine-digit number, including leading zeroes.
 valid_countryID = r"(.*)"                            #cid (Country ID) - ignored, missing or not.
 
-ReferenceValueDictionary = dict(byr=valid_birth_year,iyr=valid_issue_year,eyr=valid_ExpirationYear,hgt=valid_height,hcl=valid_hair_color, ecl=valid_eye_color,pid=valid_passportID,cid=valid_countryID)
+ReferenceValueDictionary = dict(byr=valid_birth_year, iyr=valid_issue_year, eyr=valid_ExpirationYear, hgt=valid_height, hcl=valid_hair_color, ecl=valid_eye_color, pid=valid_passportID, cid=valid_countryID)
 
-#added for readability
-ReferenceFieldDictionary= dict(byr="Birth Year", iyr ="Issue Year", eyr="Expiration Year",hgt="Height", hcl="Hair Color",ecl="Eye Color", pid="Passport ID",cid="Country ID")
+# added for readability
+ReferenceFieldDictionary = dict(byr="Birth Year", iyr="Issue Year", eyr="Expiration Year", hgt="Height", hcl="Hair Color", ecl="Eye Color", pid="Passport ID", cid="Country ID")
 
-def ParsePassportData(currentPassport: list) -> dict:
-    PassportDictionary= dict(isValid=True)
-    for line in currentPassport:
+
+def ParsePassportData(currentRawPassport: list) -> dict:
+    PassportDictionary = dict(isValid=True)
+    for line in currentRawPassport:
         entries = line.split(' ')
         for entry in entries:
             [key, value] = entry.split(":")
-            try:
-                FieldName = ReferenceFieldDictionary[key]
-                PassportDictionary[FieldName]= value
-            except:
-                PassportDictionary[isValid]=False
-                return PassportDictionary
+            if key in ReferenceFieldDictionary:  # check if key is valid
+                PassportDictionary[key] = value
+            else:
+                PassportDictionary[isValid] = False
     return PassportDictionary
 
-def isPassportValueValid(Passportdata : dict ,field_for_test : str) -> bool:
+
+def isPassportValueValid(Passportdata: dict, field_for_test: str) -> bool:
     if field_for_test[0] == "cid":
-        return True     #not testing it, valid passport may or may not contain it
+        return True     # not testing it, valid passport may or may not contain it
     else:
         value_test = ReferenceValueDictionary[field_for_test[0]]
-        result = re.search(value_test,Passportdata[field_for_test[1]])
+        result = re.search(value_test, Passportdata[field_for_test[0]])
         if result:
             return True
         else:
             return False
-    
 
 
 def isPassportDataValid(Passportdata: dict) -> bool:
-    for  requiredfields in ReferenceFieldDictionary.items():
-        if requiredfields[1] not in Passportdata.keys():
-            if requiredfields[1] != "Country ID":  #is optional for North pole passports
-                print("invalid Passport: missing",requiredfields[1])
+    for requiredfields in ReferenceFieldDictionary.items():
+        if requiredfields[0] not in Passportdata.keys():
+            if requiredfields[1] != "Country ID":  # is optional for North pole passports
+                print("invalid Passport: missing", requiredfields[1])
                 return False
-        if not isPassportValueValid(Passportdata,requiredfields):
+        if not isPassportValueValid(Passportdata, requiredfields):
             print("invalid value in field : ", requiredfields[1])
-            return False 
+            return False
     return True
 
-#init
+
+# init
 ValidPassportCounter = 0
-currentPassport_rawinput= []
+currentPassport_rawinput = []
 PassportDictionary = dict()
 
 with open(input_file, 'r') as file:
     for line in file:
-        if line == '\n':
-            #processPassport
+        if line == '\n':  # we reached the end of a single passport
+            # processPassport
             PassportDictionary = ParsePassportData(currentPassport_rawinput)
             ValidPassportCounter += isPassportDataValid(PassportDictionary)
             currentPassport_rawinput.clear()
             continue
-        l = line.strip('\n')
-        currentPassport_rawinput.append(l)
+        currentPassport_rawinput.append(line.strip('\n'))
 
 print(ValidPassportCounter)

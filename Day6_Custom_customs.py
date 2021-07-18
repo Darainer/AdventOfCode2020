@@ -13,5 +13,11 @@ def Customs_checker(text: TextIOWrapper) -> bool:
         else:
             count += len(group)
             group.clear()
-
+    count += len(group)
+    group.clear()
     return count
+
+
+input_file = 'Day6_input.txt'
+with open(input_file, 'r') as file:
+    print(Customs_checker(file))

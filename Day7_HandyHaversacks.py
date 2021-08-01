@@ -16,13 +16,25 @@ def parse_rules(text: TextIOWrapper) -> dict:
         [bag_name, contents] = line.split(" bags contain")
         contents = contents.replace(" bags", "")
         contents = contents.replace(" bag", "")
-        content_list = contents.split(",")
-        rules_dict[bag_name] = list(content_list)
-        content_list.clear()
+        rules_dict[bag_name] = set(contents.split(","))
     return rules_dict
 
 
+def Bag_wrapper_check(rules_dict: dict, target_bag: str) ->bool:
+    contains_target_bag = set()
+    contains_target_bag.add(target_bag)
+    previouslength = 0
+    while(len(contains_target_bag) == previouslength):
+        for rule in rules_dict:
+            if (rules_dict[rule]).intersection(contains_target_bag):
+                contains_target_bag.add(rule)
+        previouslength= len(contains_target_bag)
+    return len(contains_target_bag)-1
+
 #input_file = "Day7_simpletest.txt"
 input_file = "Day7_Input.txt"
+target_bag = "shiny gold"
 with open(input_file, 'r') as file:
-    parse_rules(file)
+    rules_dict = parse_rules(file)
+    output = Bag_wrapper_check(rules_dict,target_bag)
+    print(output)

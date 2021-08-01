@@ -20,9 +20,14 @@ def Bag_wrapper_check(rules_dict: dict, target_bag: str) -> int:
     previouslength = 0
     while(len(contains_target_bag) != previouslength):
         previouslength = len(contains_target_bag)
+        # check all remaining bags for intersection with confirmed bags
         for rule in rules_dict:
             if (rules_dict[rule]).intersection(contains_target_bag):
                 contains_target_bag.add(rule)
+        # removing the known ones speeds up the remaining loops
+        duplicates = contains_target_bag.intersection(rules_dict)      
+        for duplicate in duplicates:
+            del rules_dict[duplicate]
     return len(contains_target_bag)-1  # subtract the target bag
 
 

@@ -18,11 +18,11 @@ def Bag_wrapper_check(rules_dict: dict, target_bag: str) -> int:
     contains_target_bag = set()
     contains_target_bag.add(target_bag)
     previouslength = 0
-    while(len(contains_target_bag) == previouslength):
+    while(len(contains_target_bag) != previouslength):
+        previouslength = len(contains_target_bag)
         for rule in rules_dict:
             if (rules_dict[rule]).intersection(contains_target_bag):
                 contains_target_bag.add(rule)
-        previouslength = len(contains_target_bag)
     return len(contains_target_bag)-1  # subtract the target bag
 
 

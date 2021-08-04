@@ -14,6 +14,24 @@ def parse_rules(text: TextIOWrapper) -> dict:
     return rules_dict
 
 
+def parse_rules_with_count(text: TextIOWrapper) -> dict:
+    rules_dict = dict()
+    for line in text:
+        line = line.strip('.\n')
+        [bag_name, contents] = line.split(" bags contain")
+        contents = contents.replace(" bags", "")
+        contents = contents.replace(" bag", "")
+        contents = contents.split(",")
+        bag_type = []
+        bag_count = []
+        for bag_type_and_count in contents:
+            if bag_type_and_count  != " no other":
+                bag_count.append(int(bag_type_and_count[1]))
+                bag_type.append(re.sub(r' [0-9] ', "", bag_type_and_count))
+            rules_dict[bag_name] = [bag_type, bag_count]
+    return rules_dict
+
+
 def Bag_wrapper_check(rules_dict: dict, target_bag: str) -> int:
     contains_target_bag = set()
     contains_target_bag.add(target_bag)
@@ -31,10 +49,23 @@ def Bag_wrapper_check(rules_dict: dict, target_bag: str) -> int:
     return len(contains_target_bag)-1  # subtract the target bag
 
 
-# input_file = "Day7_simpletest.txt"
-input_file = "Day7_Input.txt"
-target_bag = "shiny gold"
-with open(input_file, 'r') as file:
-    rules_dict = parse_rules(file)
-    output = Bag_wrapper_check(rules_dict, target_bag)
-    print(output)
+def nested_bags_from_type(rules_with_count, target_bag) -> int:
+    total_bags = int(0)
+    [bags, counts] = rules_with_count[target_bag]
+    for bag, count in zip(bags, counts):
+        total_bags += count * (1 + nested_bags_from_type(rules_with_count, bag))
+    return total_bags
+
+
+def Part1_bags(input_file, target_bag) -> int:
+    with open(input_file, 'r') as file:
+        rules = parse_rules(file)
+        count = Bag_wrapper_check(rules, target_bag)
+    return count
+
+
+def Part2_contents(input_file, target_bag) -> int:
+    with open(input_file, 'r') as file:
+        rules_with_count = parse_rules_with_count(file)
+        total_bags = nested_bags_from_type(rules_with_count, target_bag)
+    return total_bags

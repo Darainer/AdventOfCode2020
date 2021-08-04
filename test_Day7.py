@@ -6,7 +6,7 @@ def test_Day7_exampleInputParserTest():
     with open(input_file, 'r') as file:
         output_sum = parse_rules(file)
     assert output_sum['shiny gold'] == {'vibrant plum', 'dark olive'}
-    
+
 
 def test_part1():
     input_file = "Day7_Input.txt"
@@ -18,13 +18,12 @@ def test_part1():
 def test_Day7_part2_exampleParserTest_with_count():
     input_file = "Day7_simpletest.txt"
     with open(input_file, 'r') as file:
-        output_rules = parse_rules_with_count(file)   
-    assert output_rules["shiny gold"] == [['dark olive', 'vibrant plum'], ['1', '2']]
+        output_rules = parse_rules_with_count(file)
+    assert output_rules["shiny gold"] == [['dark olive', 'vibrant plum'], [1, 2]]
 
 
 def test_Day7_part2():
     input_file = "Day7_Input.txt"
     target_bag = "shiny gold"
     output = Part2_contents(input_file, target_bag)
-    assert output == 268
-
+    assert output == 7867

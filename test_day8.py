@@ -1,6 +1,6 @@
 from Day8_HandheldHalting import run_part1, parse_instructions
 
-test_parse_result = [["nop", 0], ["acc", 1], ["jmp", 4], ["acc", 3], ["jmp", 3], ["acc", 99],["acc", 1], ["jmp", 4], ["acc", 6]]
+test_parse_result = [["nop", 0], ["acc", 1], ["jmp", 4], ["acc", 3], ["jmp", -3], ["acc", -99],["acc", 1], ["jmp", -4], ["acc", 6]]
 
 
 def test_parser_part1():

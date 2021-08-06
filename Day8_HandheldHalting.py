@@ -1,13 +1,13 @@
-import re
-
+import re   # https://regex101.com/
 
 #  def instruction = [pos opcode arg_list]
+
 
 def parse_instructions(raw_instructions):
     instructions = list()
     for line in raw_instructions:
-        op_code, arg1 = re.match('[]{3} {2}/d?', line)
-        instructions.append(op_code, arg1)
+        [op_code, arg1] = re.split(r" ", line.strip())
+        instructions.append([op_code, int(arg1)])
     return instructions
 
 

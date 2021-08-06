@@ -13,4 +13,4 @@ def test_parser_part1():
 def test_part1():
     input_file = "Day8_input.txt"
     last_instruction_line = run_part1(input_file)
-    assert last_instruction_line == 268
+    assert last_instruction_line == 1521

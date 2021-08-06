@@ -1,7 +1,5 @@
 import re   # https://regex101.com/
 
-#  def instruction = [pos opcode arg_list]
-
 
 def parse_instructions(raw_instructions):
     instructions = list()
@@ -12,20 +10,22 @@ def parse_instructions(raw_instructions):
 
 
 # input the current arc, write result to ACC
-def op_ACC(pos, acc, arg) -> int:
-    acc += arg
-    return acc
+def op_ACC(arg):
+    global accumulator, stack_pointer
+    accumulator += arg
+    stack_pointer += 1
 
 
-# input the instruction location and argument, write result to ACC
-def op_JMP(pos, acc, arg) -> int:
-    pos += arg
-    return pos
+# input the instruction location and argument, write result to pos
+def op_JMP(arg):
+    global stack_pointer
+    stack_pointer += arg
 
 
 # Noop increments ACC by one
-def op_NO_OP(pos, acc, arg) -> int:
-    return (acc+1)
+def op_NO_OP(arg):
+    global stack_pointer
+    stack_pointer += 1
 
 
 op_vtable = {
@@ -37,14 +37,14 @@ op_vtable = {
 
 def run_boot_code(boot_code):
     global accumulator, stack_pointer
-    accumulator = 0
-    stack_pointer = 0
+    accumulator = int(0)
+    stack_pointer = int(0)
     visited_instructions = set()
     while True:  # infinite loop
         if stack_pointer not in visited_instructions:
             visited_instructions.add(stack_pointer)
             instruction = boot_code[stack_pointer]
-            op_vtable[instruction[0]](stack_pointer, accumulator, instruction[1:])
+            op_vtable[instruction[0]](instruction[1])
         else:
             return accumulator
 
@@ -52,4 +52,4 @@ def run_boot_code(boot_code):
 def run_part1(input_file):
     with open(input_file, 'r') as file:
         boot_code = parse_instructions(file)
-    output_instruction = run_boot_code(boot_code)
+    return run_boot_code(boot_code)

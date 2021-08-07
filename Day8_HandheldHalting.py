@@ -71,16 +71,19 @@ def test_boot_code_for_loop(boot_code) -> list:
     return [0, accumulator]  # success, return no error code and accumulator
 
 
+Instruction_switch_map = {'jmp': 'nop', 'nop': 'jmp'}  # OPs we can switch
+
+
 def modify_boot_code(input_file):
     with open(input_file):
         boot_code = parse_instructions(input_file)
-        changeable_set = {'jmp', 'nop'}
         for instruction_idx in range(len(boot_code)):
-            if boot_code[instruction_idx][0] in changeable_set:  # try replacing OP here
-                boot_code[instruction_idx][0] = changeable_set.difference({boot_code[instruction_idx][0]}).pop()  
+            instruction = boot_code[instruction_idx][0]
+            if instruction in Instruction_switch_map:  # try replacing OP here
+                boot_code[instruction_idx][0] = Instruction_switch_map[instruction]
                 [error_code, acc] = test_boot_code_for_loop(boot_code)
                 if error_code == 0:  # we found a solution
                     return [error_code, acc]
-                else:  # reset instruction
-                    boot_code[instruction_idx][0] = changeable_set.difference({boot_code[instruction_idx][0]}).pop()  
+                else:  # reset instruction and continue
+                    boot_code[instruction_idx][0] = instruction
         return [1, acc]  # didnt find a solution

@@ -36,7 +36,7 @@ op_vtable = {
 }
 
 
-def run_boot_code_pt1(boot_code):
+def run_boot_code_until_loop(boot_code):
     global accumulator, stack_pointer
     accumulator = int(0)
     stack_pointer = int(0)
@@ -52,7 +52,7 @@ def run_boot_code_pt1(boot_code):
 
 def run_part1(input_file):
     boot_code = parse_instructions(input_file)
-    return run_boot_code_pt1(boot_code)
+    return run_boot_code_until_loop(boot_code)
 
 
 def test_boot_code_for_loop(boot_code) -> list:
@@ -74,7 +74,7 @@ def test_boot_code_for_loop(boot_code) -> list:
 Instruction_switch_map = {'jmp': 'nop', 'nop': 'jmp'}  # OPs we can switch
 
 
-def modify_boot_code(input_file):
+def part2_modify_boot_code(input_file):
     with open(input_file):
         boot_code = parse_instructions(input_file)
         for instruction_idx in range(len(boot_code)):

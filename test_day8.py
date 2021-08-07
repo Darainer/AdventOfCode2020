@@ -1,4 +1,4 @@
-from Day8_HandheldHalting import parse_instructions, run_part1, run_part2
+from Day8_HandheldHalting import parse_instructions, run_part1, modify_boot_code
 
 test_parse_result = [["nop", 0], ["acc", 1], ["jmp", 4], ["acc", 3], ["jmp", -3], ["acc", -99], ["acc", 1], ["jmp", -4], ["acc", 6]]
 
@@ -17,5 +17,5 @@ def test_part1():
 
 def test_part2():
     input_file = "Day8_input.txt"
-    [error_code, accumulator_value] = run_part2(input_file)
+    [error_code, accumulator_value] = modify_boot_code(input_file)
     assert [error_code, accumulator_value] == [0, 1016]

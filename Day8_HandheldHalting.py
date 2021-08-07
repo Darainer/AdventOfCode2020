@@ -55,7 +55,7 @@ def run_part1(input_file):
     return run_boot_code_pt1(boot_code)
 
 
-def find_runnable_boot_code(boot_code) -> list:
+def test_boot_code_for_loop(boot_code) -> list:
     global accumulator, stack_pointer
     accumulator = int(0)
     stack_pointer = int(0)
@@ -71,24 +71,16 @@ def find_runnable_boot_code(boot_code) -> list:
     return [0, accumulator]  # success, return no error code and accumulator
 
 
-def run_part2(input_file):
+def modify_boot_code(input_file):
     with open(input_file):
         boot_code = parse_instructions(input_file)
+        changeable_set = {'jmp', 'nop'}
         for instruction_idx in range(len(boot_code)):
-
-            if boot_code[instruction_idx][0] == 'jmp':
-                boot_code[instruction_idx][0] = 'nop'  # try replacing JMP here
-                [error_code, acc] = find_runnable_boot_code(boot_code)
+            if boot_code[instruction_idx][0] in changeable_set:  # try replacing OP here
+                boot_code[instruction_idx][0] = changeable_set.difference({boot_code[instruction_idx][0]}).pop()  
+                [error_code, acc] = test_boot_code_for_loop(boot_code)
                 if error_code == 0:  # we found a solution
                     return [error_code, acc]
-                else:
-                    boot_code[instruction_idx][0] = 'jmp'  # reset instruction
-
-            if boot_code[instruction_idx][0] == 'nop':
-                boot_code[instruction_idx][0] = 'jmp'  # try replacing NOP here
-                [error_code, acc] = find_runnable_boot_code(boot_code)
-                if error_code == 0:  # we found a solution
-                    return [error_code, acc]
-                else:
-                    boot_code[instruction_idx][0] = 'nop'  # reset instruction
+                else:  # reset instruction
+                    boot_code[instruction_idx][0] = changeable_set.difference({boot_code[instruction_idx][0]}).pop()  
         return [1, acc]  # didnt find a solution

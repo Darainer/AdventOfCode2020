@@ -1,12 +1,11 @@
-from Day8_HandheldHalting import run_part1, parse_instructions
+from Day8_HandheldHalting import parse_instructions, run_part1, run_part2
 
-test_parse_result = [["nop", 0], ["acc", 1], ["jmp", 4], ["acc", 3], ["jmp", -3], ["acc", -99],["acc", 1], ["jmp", -4], ["acc", 6]]
+test_parse_result = [["nop", 0], ["acc", 1], ["jmp", 4], ["acc", 3], ["jmp", -3], ["acc", -99], ["acc", 1], ["jmp", -4], ["acc", 6]]
 
 
 def test_parser_part1():
     input_file = "Day8_simple_input.txt"
-    with open(input_file, 'r') as file:
-        boot_code = parse_instructions(file)
+    boot_code = parse_instructions(input_file)
     assert boot_code == test_parse_result
 
 
@@ -14,3 +13,9 @@ def test_part1():
     input_file = "Day8_input.txt"
     last_instruction_line = run_part1(input_file)
     assert last_instruction_line == 1521
+
+
+def test_part2():
+    input_file = "Day8_input.txt"
+    [error_code, accumulator_value] = run_part2(input_file)
+    assert [error_code, accumulator_value] == [0, 1016]
